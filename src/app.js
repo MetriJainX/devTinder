@@ -49,8 +49,8 @@ app.use("/hello" ,(req,res,next)=>{
 
 
 
-app.listen(3000,()=>{
-    console.log("server is  listening on port 3000...");
+app.listen(7777,()=>{
+    console.log("server is  listening on port 7777...");
 
 });   //this means i have created a web server on port 3000 nd my app is listening
 
