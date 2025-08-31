@@ -2,9 +2,16 @@ const express= require('express');
 const app=express();
 
 
+app.listen(7777,()=>{
+    console.log("server is  listening on port 7777...");
+
+});   //this means i have created a web server on port 3000 nd my app is listening
+
+
 // THIS MATCH ALL THE HTTP METHOD API CALLS TO /TEST
 app.use("/test",(req,res)=>{
-    res.send("hello from server");
+    res.send("hello from server");  //if we write /test route then server will only listen to req which have /test inside it
+    
 });
 
 
@@ -47,12 +54,6 @@ app.use("/hello" ,(req,res,next)=>{
 //     res.send("only slash");
 // });
 
-
-
-app.listen(7777,()=>{
-    console.log("server is  listening on port 7777...");
-
-});   //this means i have created a web server on port 3000 nd my app is listening
 
 
 
@@ -106,3 +107,47 @@ res.send("login amde!");
 //REMEMBER HERE ITS JUST LOGIN SO WE DONT NEED AUTHORIZATION SO WE DIDNT USED ADMINAUTH
 
 });
+
+
+
+
+
+require("./config/database");
+
+
+
+
+
+const User=require("./models/user");
+app.use(express.json());
+// app.post("/signup",async(req,res)=>{
+//     console.log(req.body);
+
+//     // CREATING A NEW INSTANCE OF USER MODEL
+//     const user=new User({
+//         firstName:"sid",
+//         lastName:"jain",
+//         emailId:"difn@gmail.com",
+//         age:27,
+//     });
+//     try{
+//     await user.save();
+//     res.send("user added");}
+//     catch(err){
+//         res.status(400).send("error saving the user"+err.message);
+//     }
+// });
+
+
+
+// or do this
+app.post("/signup",async(req,res)=>{
+    const user=new User(req.body);
+
+  try{
+    await user.save();
+    res.send("user added");}
+    catch(err){
+        res.status(400).send("error saving the user"+err.message);
+    }
+    });
