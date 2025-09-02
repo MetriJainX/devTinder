@@ -151,3 +151,80 @@ app.post("/signup",async(req,res)=>{
         res.status(400).send("error saving the user"+err.message);
     }
     });
+// THE 2 CODES BELOW ARE FOR ADDING GENDER TO PREVIOUSBUT I COULDNT DO THT
+// app.post("/users", async (req, res) => {
+//   const user = new User(req.body);
+
+//   if (!gender) {
+//     return res.status(400).json({ error: "Gender is required" });
+//   }
+
+// //   const user = new User({ firstName, lastName, age, emailId, gender });
+//   await user.save();
+//   res.status(201).send(user);
+// });
+
+
+// app.put("/users/:id", async (req, res) => {
+//   const updateData = req.body;
+
+//   if (!updateData.gender) {
+//     updateData.gender = "Not Specified"; // or throw an error
+//   }
+
+//   const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+//   res.send(user);
+// });  
+
+// get user by email
+    app.get("/signup",async(req,res)=>{
+        const username=req.body.firstName;
+          try{
+            const user=await User.find({firstName:username});
+            if(user.length===0){res.status(404).send("user not found");}
+           else{res.send(user);} 
+          }
+          catch(err){
+            res.status(400).send("something went wrong");
+          }
+    });
+    
+    // if we didnt passed anything in the find it will ruturn all docs
+ app.get("/all",async(req,res)=>{
+   try{ const user=await User.find({});
+    res.send(user);}
+    catch(err){
+        res.status(400).send("something went wrongg");
+    }
+
+ });
+
+
+
+ app.delete("/del",async(req,res)=>{
+    const userid=req.body.userid;
+    try{
+        const user=await User.findByIdAndDelete({_id:userid});
+        res.send("user deleted");
+    }
+    catch(err){
+        res.status(400).send("somethig went wrong");
+    }
+ });
+
+
+//  to update the userdata
+app.patch("/update",async(req,res)=>{
+    const data=req.body;
+    const userid=req.body.userid;
+// console.log(data);
+
+    try{
+       const user= await User.findByIdAndUpdate(userid,data,{
+            returnDocument:"before",runValidators:true});
+        console.log(user);
+        res.send("user updated ache se");
+    }catch(err){
+        res.status(400).send("somethung went terrible");
+    }
+});
