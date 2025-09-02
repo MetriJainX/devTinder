@@ -1,13 +1,15 @@
 const mongoose=require("mongoose");
+const validator=require("validator");
 const userSchema=new mongoose.Schema({
     firstName:{ required:true,
         type:String 
     },
     lastName:{
         type:String},
-    gender:{required:true,validate(value){
+    gender:{required:true,
+        validate(value){
         if(!["male","female","others"].includes(value)){
-            throw new error("gender is not valid");
+            throw new Error("gender is not valid");
             
         }
     },
@@ -15,10 +17,31 @@ const userSchema=new mongoose.Schema({
 
     age:{required:true,min:18,max:55,type:Number},
 
-    emailId:{required:true,trim:true,
-        type:String},
-about:{type:String,
-    default:"im an indian"}
+    emailId:{required:true,
+        trim:true,
+        type:String,
+        validate(value){
+if(!validator.isEmail(value)){
+throw new Error("invalid email "+value);
+}        }
+        },
+    about:{type:String,validate(value){
+if(validator.isInt(value)){
+    throw new Error("type a string" + value);
+}
+    },
+    default:"im an indian"},
+    skills:{
+        type:[String]
+    },
+    password:{
+        type:String,
+        validate(value){
+if(!validator.isStrongPassword(value)){
+    throw new Error("eneter a strong password" + value);
+}
+        }
+    }
 },{timestamps:true});
 
 

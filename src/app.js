@@ -214,17 +214,33 @@ app.post("/signup",async(req,res)=>{
 
 
 //  to update the userdata
-app.patch("/update",async(req,res)=>{
+app.patch("/update/:userid",async(req,res)=>{
     const data=req.body;
-    const userid=req.body.userid;
+    const userid=req.params?.userid;
 // console.log(data);
 
     try{
+        const allowedUpdates=["age","about","skills","gender"];
+        
+        // chceck krne ki given data ki hr ek key ke liye allowed_updates true h ki ni
+        const isUpdatedAllowed=Object.keys(data).every((k)=>
+            allowedUpdates.includes(k)
+        );
+
+        // agr update allow ni h to error bhejne
+        if(!isUpdatedAllowed){
+            throw new Error("updates not allowed");
+        }
+        if(data?.skills.length>10){
+            throw new Error("skills cant be more then 10");
+        }
+
        const user= await User.findByIdAndUpdate(userid,data,{
             returnDocument:"before",runValidators:true});
         console.log(user);
         res.send("user updated ache se");
     }catch(err){
-        res.status(400).send("somethung went terrible");
+        res.status(400).json({ error: err.message });
+};
     }
-});
+);
