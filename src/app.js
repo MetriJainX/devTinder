@@ -140,17 +140,63 @@ app.use(express.json());
 
 
 
+
+
+
+// encrypting passwords
+const{validateSignUpData}=require("./utils/validation");
+const bcrypt=require("bcrypt");
 // or do this
 app.post("/signup",async(req,res)=>{
     const user=new User(req.body);
 
   try{
+    // validation 
+    validateSignUpData(req);  //ise try ke andr kro taaki koi bhi erroe aaye to catch ho ajye
+    
+
+    const{firstName,lastName,emailId,password,age,gender}=req.body;   // storing the data in func
+
+    // encrypting the password
+const passwordHash=await bcrypt.hash(password,10);
+console.log(passwordHash);
+
+
+//creating a new instance od user model
+const user=new User({
+    firstName,lastName,emailId,password:passwordHash,age,gender
+});
+
+
     await user.save();
     res.send("user added");}
     catch(err){
-        res.status(400).send("error saving the user"+err.message);
+        res.status(400).send("error saving the user  "+err.message);
     }
     });
+
+
+ // LET US CRAETE A LOGIN API FOR USERS AS SIGNUP KE BAD LOGIN BHI TO HOGA NA
+app.post("/login",async(req,res)=>{
+    try{
+        const {emailId,password}=req.body;     //request me se email ,password extract kia
+        const user=await User.findOne({emailId:emailId});  //since async tha to await sare func me aaega and we just checked whetehr email exists ro not nd they should be in curly braces coz they are not params
+if(!user){
+    throw new Error("invalid credentials");
+}
+const isPasswordValid= await bcrypt.compare(password,user.password); 
+if(!isPasswordValid){
+throw new Error("invalid credentials");
+}
+else{
+    res.send("login successful");
+}
+        
+    }
+    catch(err){
+        res.status(400).send("ERROR  "+err.message);
+    }
+});
 // THE 2 CODES BELOW ARE FOR ADDING GENDER TO PREVIOUSBUT I COULDNT DO THT
 // app.post("/users", async (req, res) => {
 //   const user = new User(req.body);
