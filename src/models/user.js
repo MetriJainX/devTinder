@@ -53,3 +53,17 @@ module.exports=User;
 
 // OR LIKE THIS
 // MODULE.EXPORTS=mongoose.model("User",userSchema);
+
+
+userSchema.methods.getJWT=async function(){
+    const user=this;
+    const token=await jwt.sign({_id:user._id},"#Crazyworld2004#",{expiresIn:"2d"});
+    return token; 
+  };
+
+  userSchema.methods.passwordValidation=async function(passwordInputByUser){
+    const user=this;
+    const passwordHash=user.password;
+    const isPasswordValid=await bcrypt.compare(passwordInputByUser,passwordHash); 
+    return isPasswordValid;  //decrpted pw return krrhe h 
+  };
