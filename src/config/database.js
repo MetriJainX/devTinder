@@ -49,8 +49,7 @@ const connectDb = async () => {
   }
 };
 
-// Call the function immediately (same as Namaste Node.js)
-connectDb();
+
 
 module.exports = connectDb;
 // mongodb+srv://jainmetrii_db_user:qfubpshcGQjhtivz@cluster0.irnoaye.mongodb.net/devTinder

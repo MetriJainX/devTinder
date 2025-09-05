@@ -15,8 +15,16 @@ const validateSignUpData=(req)=>{   //we will pass out req in this func
    throw new Error("enter a strong pasword");
  }
 }
+
+
+
+const validateEditProfileData=(req)=>{
+   const allowedEditFields=["firstName","skills","lastName","emailId","gender","age","about"];
+ return Object.keys(req.body).every((field)=>allowedEditFields.includes(field));
+
+};
 module.exports={
-   validateSignUpData
+   validateSignUpData,validateEditProfileData
 };
 
 

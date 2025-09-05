@@ -1,5 +1,7 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
+const jwt=require("jsonwebtoken");
+const bcrypt=require("bcrypt");
 const userSchema=new mongoose.Schema({
     firstName:{ required:true,
         type:String 
@@ -46,10 +48,6 @@ if(!validator.isStrongPassword(value)){
 
 
 // EITEHR U CAN DO LIKE THIS
-const User=mongoose.model("User",userSchema);
-module.exports=User;
-
-
 
 // OR LIKE THIS
 // MODULE.EXPORTS=mongoose.model("User",userSchema);
@@ -67,3 +65,5 @@ userSchema.methods.getJWT=async function(){
     const isPasswordValid=await bcrypt.compare(passwordInputByUser,passwordHash); 
     return isPasswordValid;  //decrpted pw return krrhe h 
   };
+  const User=mongoose.model("User",userSchema);
+module.exports=User;

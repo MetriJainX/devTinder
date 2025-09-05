@@ -1,19 +1,32 @@
 const express= require('express');
 const app=express();
+const cookieParser=require("cookie-parser");
+const connectDb=require("./config/database");
+const User = require("./models/user");
+
+app.use(express.json());
+app.use(cookieParser());
+const authRouter=require("./routes/auth");
+const profileRouter=require("./routes/profile");
+const reqRouter=require("./routes/request");
 
 
-app.listen(7777,()=>{
-    console.log("server is  listening on port 7777...");
 
-});   //this means i have created a web server on port 3000 nd my app is listening
+app.use("/",authRouter);
+app.use("/",reqRouter);
+app.use("/",profileRouter);
 
 
-// THIS MATCH ALL THE HTTP METHOD API CALLS TO /TEST
 app.use("/test",(req,res)=>{
     res.send("hello from server");  //if we write /test route then server will only listen to req which have /test inside it
     
 });
 
+connectDb().then(() => {
+  app.listen(7777, () => {
+    console.log("server is listening on port 7777...");
+  });
+});
 
 
 
@@ -232,7 +245,7 @@ app.patch("/update/:userid",async(req,res)=>{
         if(!isUpdatedAllowed){
             throw new Error("updates not allowed");
         }
-        if(data?.skills.length>10){
+        if(data?.skills && data.skills.length>10){
             throw new Error("skills cant be more then 10");
         }
 

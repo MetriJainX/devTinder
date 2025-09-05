@@ -4,8 +4,13 @@ const User=require("../models/user");
      
 const userAuth=async(req,res,next)=>{
        //validate my token
+       //   //  console.log("Cookies:", req.cookies);
+//     console.log("Token from cookie:", req.cookies.token);
+
      try{
           //read the tokrn from the req cookies
+          // console.log("Cookies:", req.cookies);
+
      const{token}=req.cookies;    //do codes ko mix kia h  //cookies me se token extract krna
 
 if(!token){
