@@ -16,7 +16,7 @@ const userAuth=async(req,res,next)=>{
 if(!token){
      throw new Error("token is not found");
 }  
-   const decodeObj=await jwt.verify(token,"#Crazyworld2004#");     //is verify func me apn token,secret msg pas krdege jo sirf server ko pta hota h
+   const decodeObj=jwt.verify(token,"#Crazyworld2004#");     //is verify func me apn token,secret msg pas krdege jo sirf server ko pta hota h
 const{_id}=decodeObj;
 const user=await User.findById(_id);
 if(!user){
